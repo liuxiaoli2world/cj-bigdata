@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.order.mapper.HisBookMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.order.model.HisBook" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="his_book_id" property="hisBookId" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+    <result column="dir_name" property="dirName" jdbcType="VARCHAR" />
+    <result column="book_name" property="bookName" jdbcType="VARCHAR" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="isbn" property="isbn" jdbcType="CHAR" />
+    <result column="chapter_price" property="chapterPrice" jdbcType="DOUBLE" />
+    <result column="is_full" property="isFull" jdbcType="SMALLINT" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="BookDirNamesMap" type="java.util.HashMap" >
+    <result column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+    <result column="dir_name" property="dirName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectBookDirNames" resultMap="BookDirNamesMap" parameterType="string">
+  	SELECT book_dir_id,dir_name FROM his_book WHERE order_no = #{order_no}
+  </select>
+</mapper>

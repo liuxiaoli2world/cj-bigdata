@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.BookDirMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.BookDir">
+		<!-- WARNING - @mbg.generated -->
+		<id column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+		<result column="parent_book_dir_id" property="parentBookDirId"
+			jdbcType="BIGINT" />
+		<result column="isbn" property="isbn" jdbcType="CHAR" />
+		<result column="dir_name" property="dirName" jdbcType="VARCHAR" />
+		<result column="has_leaf" property="hasLeaf" jdbcType="SMALLINT" />
+		<result column="is_try" property="isTry" jdbcType="SMALLINT" />
+		<result column="dir_desc" property="dirDesc" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+		<result column="bak1" property="bak1" jdbcType="VARCHAR" />
+		<result column="dir_code" property="dirCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BookOrderMap" type="java.util.HashMap">
+		<result column="isbn" property="isbn" jdbcType="CHAR" />
+		<result column="dir_name" property="dirName" jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="full_price" property="fullPrice" jdbcType="DOUBLE" />
+		<result column="chapter_price" property="chapterPrice"
+			jdbcType="DOUBLE" />
+		<result column="book_name" property="bookName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="SimpleAllBookDirMap" type="hashmap">
+		<id column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+		<result column="parent_book_dir_id" property="parentBookDirId"
+			jdbcType="BIGINT" />
+		<result column="isbn" property="isbn" jdbcType="CHAR" />
+		<result column="dir_name" property="dirName" jdbcType="VARCHAR" />
+		<result column="has_leaf" property="hasLeaf" jdbcType="SMALLINT" />
+		<result column="is_try" property="isTry" jdbcType="SMALLINT" />
+		<result column="full_price" property="fullPrice" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="selectAllByIsbn" resultMap="SimpleAllBookDirMap">
+		SELECT bd.book_dir_id,
+		bd.parent_book_dir_id, bd.isbn, bd.dir_name, bd.has_leaf, bd.is_try,
+		b.full_price
+		FROM book_dir bd
+		JOIN book b ON b.isbn = bd.isbn
+		WHERE
+		bd.isbn = #{isbn}
+	</select>
+
+	<!-- 查询图书商品所需信息 -->
+	<select id="selectBookOrderInfo" resultMap="BookOrderMap"
+		parameterType="long">
+		SELECT
+		b.isbn, bd.dir_name, bi.image_url, b.full_price, b.chapter_price, b.book_name
+		FROM
+		book_dir bd, book b, book_image bi
+		WHERE
+		bd.isbn = b.isbn AND bd.isbn = bi.isbn AND bi.image_scene = '1' AND
+		bd.book_dir_id = #{bookDirId}
+	</select>
+
+
+	<!-- 根据图书目录id查询祖先节点，不包括当前菜单 -->
+	<select id="selectParentList" resultMap="BaseResultMap">
+		select * from book_dir
+		where find_in_set(book_dir_id,
+		findParentBookDirList(#{bookDirId})) and
+		book_dir_id != #{bookDirId}
+	</select>
+
+	<!-- 根据图书目录id查询后代节点，不包括当前目录 -->
+	<select id="selectChildList" resultMap="BaseResultMap">
+		select * from book_dir
+		where find_in_set(book_dir_id,
+		findChildBookDirList(#{bookDirId})) and
+		book_dir_id != #{bookDirId}
+	</select>
+
+	<!-- 根据图书目录id查询子目录 -->
+	<select id="selectChild" parameterType="Long" resultMap="BaseResultMap">
+		select
+		a.* from book_dir a inner join book_dir b on a.parent_book_dir_id =
+		b.book_dir_id where b.book_dir_id = #{bookDirId}
+	</select>
+
+	<!-- 根据 isbn 查询最后一个根目录 -->
+	<select id="selectLastOneByIsbn" resultMap="BaseResultMap">
+		SELECT * FROM
+		book_dir WHERE parent_book_dir_id = 0 AND isbn = #{isbn} ORDER BY 1
+		DESC LIMIT 0 ,1 ;
+	</select>
+
+	<!-- 根据parentBookDirId查询最后一个子目录 -->
+	<select id="selectLastOneByParentBookDirId" resultMap="BaseResultMap">
+		SELECT *
+		FROM book_dir WHERE parent_book_dir_id = #{parentBookDirId} ORDER BY 1
+		DESC LIMIT 0 ,1 ;
+	</select>
+
+	<!-- 根据bookDirId查询后代节点,包括当前目录 -->
+	<select id="selectdescendantList" parameterType="long" resultType="long">
+		SELECT book_dir_id as id FROM book_dir
+		WHERE find_in_set(book_dir_id,
+		findChildBookDirList (#{bookDirId}));
+	</select>
+	
+	<!-- 根据parentBookDirId 查询第一个叶子节点 -->
+	<select id="selectFirstLeafByParentBookDirId" parameterType="long" resultType="long">
+		SELECT  
+		book_dir_id FROM book_dir 
+		where FIND_IN_SET(book_dir_id,findChildBookDirList(#{parentBookDirId})) and has_leaf = 0 
+		order by book_dir_id 
+		limit 0,1;
+	</select>
+
+</mapper>

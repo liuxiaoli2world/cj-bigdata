@@ -1,0 +1,187 @@
+
+.login-page {
+	.logo {
+		background:url('~assets/images/logo.png') no-repeat right center;
+		width:100px;
+		height:54px;
+	}
+	.welcome {	
+		display: inline-block;
+		border-left: 2px solid gray;
+		padding-left: 6px;
+		margin: 3px;
+	}
+	.login {
+		float: right;
+		line-height: 46px;
+		.logo-item {
+			margin: 8px;
+			font-size:12px;
+		}
+	}
+    .content{
+       .content_img{
+          margin-top:130px; 
+          margin-bottom:172px;
+          width:990px;
+          height:270px;
+          border:1px solid #d4d4d4;
+          padding-top:10px;
+          padding-left:10px;
+          position: relative;
+          img{
+              width:650px;
+              height:250px;
+          }
+          .content_login{
+              width:300px;
+              height:360px;
+              border:1px solid #d4d4d4;
+              background: #eee;
+              position:absolute;
+              top:-40px;
+              left:676px;
+              .content_login_header{
+                  height:32px;
+                  margin:0 10px 0 10px;
+                  border-bottom:1px dashed #d4d4d4;
+                  line-height: 32px;
+                  font-size:16px;
+                  color:#3d95d5;
+                  font-weight: bold;
+              }
+              .content_login_content{
+                  .content_login_content_item{
+                      height:50px;
+                      padding-top: 20px;
+                      padding-left:30px;
+                      .ant-input{
+                          width:180px;
+                          height:30px;
+                          border-radius:2px;
+                      }
+                  }
+              }
+              .content_login_content_radio{
+                   padding-left:85px;
+                   padding-top:10px;
+                  .square{
+                      width:10px;
+                      height:10px;
+                      background: #ffffff;
+                  }
+              }
+              .content_login_content_button{
+                  padding-top: 40px;
+                  padding-left:85px;
+                  .ant-btn{
+                    width:90px;
+                    height:30px;
+                    border-radius:2px;
+                    background: #3d95d5;
+                    color:#ffffff;
+                    font-size:16px;
+                    padding:0;
+                  }
+              }
+              .content_login_content_register{
+                  padding-top:40px;
+                  padding-left:85px;
+                  a{
+                      color:#3d95d5;
+                  }
+              }
+          }
+       }
+       .content_head{
+           padding-left:24px;
+           margin-top:40px;
+           span{
+               display:inline-block;
+               width:920px;
+               text-align: right;
+           }
+       }
+    }
+    .bottom_img{
+        img{
+            width:100%;
+        }
+    }
+   .login-page form span{
+       width:0px;
+   }
+   .ant-input{
+       width:210px;
+       height:30px;
+       border-radius:2px;
+       margin-right: 6px;;
+   }
+   .verify_input{
+       width:120px;
+       height: 30px;
+       margin-right:9px;
+       float:left;
+   }
+   .verify{
+       text-align: center;
+       font-size:18px;
+       font-family: Comic Sans Ms;
+       display: inline-block;
+       background: #cccccc;
+       height: 30px;
+       width: 80px;
+       margin-right:6px;
+   }
+   .btn{
+       width: 90px;
+       height: 30px;
+       border-radius: 2px;
+       margin-right:60px;
+       margin-bottom:150px;
+       background: #3d95d5;
+   }
+   .ant-form{
+       padding-top: 38px;
+   }
+   .nextstep{
+       width:210px;
+       height:30px;
+   }
+   .makesure{
+       width:210px;
+       height:30px;
+       margin-bottom:300px;
+   }
+   .content_middle{
+        text-align: center;
+        margin-top:46px;
+        color:#999999;
+        font-size:12px;
+       .first-line{
+            font-size:14px;
+            margin-bottom:24px;
+       }
+       .second-line{
+            margin-bottom:40px;
+       }
+       .last-line{
+            line-height:26px;
+            width:324px;
+            display: inline-block;
+            margin-top:30px;
+            text-align: left;
+            margin-bottom:258px;
+       }
+       button{
+            width: 324px;
+            height: 40px;
+            background-color: rgba(61, 149, 213, 1);
+            border:0 none;
+            outline:0 none;
+            color:#ffffff;
+            font-size:16px;
+            cursor: pointer;
+       }
+   }
+}

@@ -1,0 +1,232 @@
+.uploading-box-modal .ant-modal {
+  width: 160px !important;
+  top: 50%;
+  margin-top: -80px;
+}
+
+.uploading-box-modal .ant-modal-header {
+  background: #3f93cd;
+  display: none;
+}
+
+.uploading-box-modal .ant-modal-footer {
+  text-align: center;
+  border-top: 0;
+  display: none;
+}
+
+.uploading-box-modal .xmlInfo {
+  width: 230px;
+  display: inline-block;
+  margin: 40px 20px 0 24px;
+}
+
+.uploading-box-modal .ant-modal-body {
+  text-align: center;
+  height: 160px;
+}
+
+.uploading-box-modal .ant-modal-content {
+  border-radius: 10px;
+}
+
+.uploading-box-modal .ant-spin-spinning {
+  margin-top: 22px;
+}
+
+.uploading-box-modal .ant-spin-spinning .ant-spin-dot {
+  width: 40px;
+  height: 40px;
+}
+
+.uploading-box-modal .ant-spin-spinning .ant-spin-dot i {
+  width: 18px;
+  height: 18px;
+}
+
+.uploading-box-modal .ant-spin-spinning .ant-spin-text {
+  margin-top: 26px;
+}
+
+.upload-box-modal .ant-modal-header {
+  background: #393f4f !important;
+  color: white;
+}
+
+.ant-pagination-prev a:after {
+  content: "\E605";
+  height: 32px;
+  line-height: 32px;
+}
+
+.ant-pagination-next a:after {
+  content: "\E604";
+  height: 32px;
+  line-height: 32px;
+}
+
+.ant-pagination-next {
+  border-left: 1px solid transparent;
+}
+
+.ant-pagination-item {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 0;
+  margin-right: 0;
+  float: left;
+  font-size: 12px;
+  border-left: 1px solid transparent;
+}
+
+.ant-pagination-jump-prev, .ant-pagination-jump-next, .ant-pagination-prev, .ant-pagination-next {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 0;
+  margin-right: 0;
+  float: left;
+}
+
+.ant-pagination-options-quick-jumper input {
+  height: 32px;
+  line-height: 32px;
+  border-radius: 0;
+  width: 40px;
+}
+
+.ant-pagination-item-active {
+  background: #3D95D5;
+  border-color: #3D95D5;
+}
+
+.ant-pagination-jump-next + .ant-pagination-item {
+  border-left: 1px solid #d9d9d9;
+}
+
+.ant-pagination-jump-next + .ant-pagination-item:hover {
+  border-color: #3d95d5;
+}
+
+.ant-pagination-jump-prev + .ant-pagination-item {
+  border-left: 1px solid #d9d9d9;
+}
+
+.ant-pagination-jump-prev + .ant-pagination-item:hover {
+  border-color: #3d95d5;
+}
+
+/* .ant-table-body .ant-table-thead th,.ant-table-tbody .ant-table-row {
+    text-align: center;
+} */
+.ant-table-pagination {
+  margin: 46px 0 80px;
+}
+
+.ant-pagination-item {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 0;
+  margin-right: 0;
+  float: left;
+  font-size: 12px;
+}
+
+.ant-pagination-jump-prev, .ant-pagination-jump-next, .ant-pagination-prev, .ant-pagination-next {
+  min-width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 0;
+  margin-right: 0;
+  float: left;
+}
+
+.ant-pagination-options-quick-jumper input {
+  height: 32px;
+  line-height: 32px;
+  border-radius: 0;
+  width: 40px;
+}
+
+.ant-pagination-item-active {
+  background: #3D95D5;
+  border-color: #3D95D5;
+}
+
+.ant-table-bordered .ant-table-thead > tr > th, .ant-table-bordered .ant-table-tbody > tr > td {
+  text-align: center;
+  color: #666666;
+  border-color: #cccccc;
+  height: 66px;
+  padding: 0;
+}
+
+.ant-table {
+  border-radius: 2px 2px 0 0;
+}
+
+.ant-table table {
+  border-color: #cccccc;
+}
+
+.ant-table-thead > tr > th {
+  background: #ffffff;
+}
+
+.ant-table-thead > tr.ant-table-row-hover > td, .ant-table-tbody > tr.ant-table-row-hover > td, .ant-table-thead > tr:hover > td, .ant-table-tbody > tr:hover > td {
+  background: #ffffff;
+}
+
+.ant-modal-close-x:before {
+  color: #fff;
+}
+
+.trybox-modal .ant-modal {
+  width: 960px !important;
+}
+
+.trybox-modal .ant-modal .ant-modal-close-x:before {
+  color: #fff;
+}
+
+.trybox-modal .ant-modal-header {
+  background: #393f4f;
+  border-radius: 0;
+}
+
+.trybox-modal .ant-modal-body {
+  padding: 35px 40px 55px 40px;
+  font-size: 14px;
+}
+
+.trybox-modal .ant-modal-body .try-content {
+  display: inline-block;
+  width: 800px;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #d9d9d9;
+  vertical-align: top;
+  padding: 20px 15px;
+}
+
+.trybox-modal .ant-modal-body .tryNum {
+  margin-bottom: 20px;
+}
+
+.trybox-modal .ant-modal-body .tryNum .numInput {
+  margin-right: 20px;
+}
+
+.trybox-modal .ant-modal-content {
+  border-radius: 0;
+}
+
+.bookForm {
+  width: 1200px;
+}
+
+.editButtons .save-btn {
+  margin-right: 20px;
+}

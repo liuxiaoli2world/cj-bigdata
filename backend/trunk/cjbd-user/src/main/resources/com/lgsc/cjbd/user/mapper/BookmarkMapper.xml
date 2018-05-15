@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.BookmarkMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.Bookmark" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="bookmark_id" property="bookmarkId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="book_section_id" property="bookSectionId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="page" property="page" jdbcType="INTEGER" />
+    <result column="xyz" property="xyz" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

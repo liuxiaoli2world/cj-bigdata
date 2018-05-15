@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.expert.mapper.ExpertDomainMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.expert.model.ExpertDomain" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="expert_domain_id" property="expertDomainId" jdbcType="BIGINT" />
+    <result column="domain_id" property="domainId" jdbcType="BIGINT" />
+    <result column="expert_id" property="expertId" jdbcType="BIGINT" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!-- 根据专家id查询专家分类关系-->
+  <select id="selectByExceptId" parameterType="Long" resultMap="BaseResultMap">
+		select * from expert_domain where expert_id=#{expertId}
+	</select>
+  <!-- 根据专家分类编号查询所有的专家id-->
+  <select id="selectByDomainId" parameterType="Long" resultType="Long">
+		select expert_id from expert_domain where domain_id=#{domainId} order by expert_id asc
+	</select>
+  <!-- 根据专家id删除专家分类关系-->
+  <delete id="deleteByExpertId" parameterType="Long">
+		delete * from expert_domain where expert_id=#{expertId}
+	</delete>
+</mapper>

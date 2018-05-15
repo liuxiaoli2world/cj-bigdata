@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.expert.mapper.DomainMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.expert.model.Domain" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="domain_id" property="domainId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="domain_desc" property="domainDesc" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  	<!-- 根据分类名称查询专家分类id -->
+  	<select id="selectByClassifyName" resultType="long">
+	select domain_id from domain where name=#{name}
+	</select>
+	
+  	<!-- 根据分类名称模糊查询专家分类 -->
+  	<select id="selectDomainByName" resultMap="BaseResultMap">
+	select * from domain where name like concat('%',#{name},'%')
+	</select>
+	
+	<!-- 根据专家id，查询专家分类名称 -->
+	<select id="selectNameByExpertId" parameterType="Long" resultType="String">
+		select d.name from domain d inner join expert_domain ed on
+		d.domain_id=ed.domain_id where ed.expert_id=#{expertId}
+	</select>
+  
+</mapper>

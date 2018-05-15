@@ -1,0 +1,134 @@
+[
+    {
+        "allowId": 100,
+        "parentAllowId": 0,
+        "allowName": "首页",
+        "isAllows": true
+    },
+    {
+        "allowId": 101,
+        "parentAllowId": 0,
+        "allowName": "内容管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 102,
+        "parentAllowId": 0,
+        "allowName": "资源管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 103,
+        "parentAllowId": 0,
+        "allowName": "专家管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 104,
+        "parentAllowId": 0,
+        "allowName": "用户管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 105,
+        "parentAllowId": 0,
+        "allowName": "数据分析",
+        "isAllows": true
+    },
+    {
+        "allowId": 106,
+        "parentAllowId": 0,
+        "allowName": "系统设置",
+        "isAllows": true
+    },
+    {
+        "allowId": 107,
+        "parentAllowId": 104,
+        "allowName": "用户管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 108,
+        "parentAllowId": 104,
+        "allowName": "机构管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 109,
+        "parentAllowId": 104,
+        "allowName": "异常设置",
+        "isAllows": true
+    },
+    {
+        "allowId": 110,
+        "parentAllowId": 104,
+        "allowName": "意见箱",
+        "isAllows": true
+    },
+    {
+        "allowId": 111,
+        "parentAllowId": 103,
+        "allowName": "专家管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 112,
+        "parentAllowId": 103,
+        "allowName": "专家分类",
+        "isAllows": true
+    },
+    {
+        "allowId": 113,
+        "parentAllowId": 105,
+        "allowName": "订单管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 114,
+        "parentAllowId": 105,
+        "allowName": "用户分析",
+        "isAllows": true
+    },
+    {
+        "allowId": 115,
+        "parentAllowId": 106,
+        "allowName": "文献分类",
+        "isAllows": true
+    },
+    {
+        "allowId": 116,
+        "parentAllowId": 106,
+        "allowName": "权限分组",
+        "isAllows": true
+    },
+    {
+        "allowId": 117,
+        "parentAllowId": 106,
+        "allowName": "热词设置",
+        "isAllows": true
+    },
+    {
+        "allowId": 118,
+        "parentAllowId": 102,
+        "allowName": "图书管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 119,
+        "parentAllowId": 102,
+        "allowName": "图书分类",
+        "isAllows": true
+    },
+    {
+        "allowId": 120,
+        "parentAllowId": 102,
+        "allowName": "资源管理",
+        "isAllows": true
+    },
+    {
+        "allowId": 121,
+        "parentAllowId": 102,
+        "allowName": "会员商品",
+        "isAllows": true
+    }
+]

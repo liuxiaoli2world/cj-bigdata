@@ -1,0 +1,52 @@
+.ant-layout-sider {
+    background: #393f4f;
+    // width: 230px;
+    // flex: 0 0 230px !important;
+    position:absolute;
+    z-index: 999;
+    .logo {
+        height:106px;
+        text-align: center;
+        vertical-align: middle;
+        img{
+            margin-top:20px;
+            width:126px;
+            height:62px;
+        }
+    }
+}
+.ant-layout-has-sider .ant-layout{
+    padding-left:230px;
+    position:relative;
+    padding-top:65px;
+}
+.ant-layout-header{
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+}
+
+.ant-menu-dark, .ant-menu-dark .ant-menu-sub {
+     background: #393f4f;
+ }
+
+.ant-menu-vertical .ant-menu-item, .ant-menu-inline .ant-menu-item, .ant-menu-vertical .ant-menu-submenu-title, .ant-menu-inline .ant-menu-submenu-title {
+    padding-left: 60px !important;
+    height: 60px;
+    line-height: 60px;
+    img {
+        vertical-align: middle;
+        margin-right: 20px;
+        height: 22px;
+        width: 22px;
+        margin-top: -7px;
+    }
+    a {        
+        font-size: 16px;
+    }
+}
+.ant-menu.ant-menu-dark .ant-menu-item-selected {
+    background: #3d95d5;
+}
+

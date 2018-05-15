@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.UserVipMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.UserVip">
+		<!-- WARNING - @mbg.generated -->
+		<id column="user_vip_id" property="userVipId" jdbcType="BIGINT" />
+		<result column="vip_id" property="vipId" jdbcType="BIGINT" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+		<result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectVipStatus" parameterType="Long" resultType="String">
+		SELECT
+		(
+		CASE
+		WHEN count(end_date)=0 THEN
+		"普通用户"
+		WHEN end_date &gt;= NOW()
+		THEN
+		"会员"
+		WHEN end_date &lt; NOW() THEN
+		"过期会员"
+		END
+		) AS vipStatus
+		FROM
+		user_vip
+		WHERE
+		user_id = #{userId}
+	</select>
+
+	<select id="selectEndDate" parameterType="Long" resultType="Date">
+		SELECT end_date FROM
+		user_vip
+		WHERE
+		user_id = #{userId}
+	</select>
+	
+	<!-- 修改用户会员时长 -->
+	<update id="updateEndDate">
+		UPDATE user_vip SET begin_date = #{beginDate,jdbcType=TIMESTAMP}, end_date = #{endDate,jdbcType=TIMESTAMP}, updated_at = NOW() WHERE user_id = #{userId,jdbcType=BIGINT}
+	</update>
+	
+	<!-- 累加用户会员时长 -->
+	<update id="updateAddUpEndDate">
+		UPDATE user_vip SET end_date = TIMESTAMPADD(MONTH, #{duration}, end_date), updated_at = NOW() WHERE user_id = #{userId,jdbcType=BIGINT}
+	</update>
+	
+</mapper>

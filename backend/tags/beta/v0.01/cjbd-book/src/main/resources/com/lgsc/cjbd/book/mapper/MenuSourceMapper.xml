@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.MenuSourceMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.MenuSource" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="menu_source_id" property="menuSourceId" jdbcType="BIGINT" />
+    <result column="menu_id" property="menuId" jdbcType="BIGINT" />
+    <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
+    <result column="source_id" property="sourceId" jdbcType="BIGINT" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="SearchResultMap" type="java.util.HashMap" >
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="release_date" property="releaseDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 首页根据简介、作者和标题搜索图书、图片、资讯 -->
+  <select id="selectSearch" resultMap="SearchResultMap">
+  	SELECT b.book_id AS `id`, 'book' AS `type`, b.book_name AS title, b.book_desc AS `desc`, b.author, b.release_date
+	FROM book b
+	<if test="keyword != null">
+	<choose>
+		<when test=' scope == "title" '>
+			WHERE b.book_name LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+		<when test=' scope == "author" '>
+			WHERE b.author LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+		<when test=' scope == "desc" '>
+			WHERE b.book_desc LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+	</choose>
+	</if>
+	UNION
+	SELECT c.content_id AS `id`, c.content_type AS `type`,c.title AS title, c.content_desc AS `desc`, c.author, c.publication_date AS release_date
+	FROM content c
+	<if test="keyword != null">
+	<choose>
+		<when test=' scope == "title" '>
+			WHERE c.title LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+		<when test=' scope == "author" '>
+			WHERE c.author LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+		<when test=' scope == "desc" '>
+			WHERE c.content_desc LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+	</choose>
+	</if>
+	UNION
+	SELECT m.multifile_id AS `id`, 'multifile' AS `type`, m.title AS title, m.multi_desc AS `desc`, '' AS author, m.updated_at AS release_date
+	FROM multifile m
+	<if test="keyword != null">
+	<choose>
+		<when test=' scope == "title" '>
+			WHERE m.title LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+		<when test=' scope == "author" '>
+			WHERE 1=2
+		</when>
+		<when test=' scope == "desc" '>
+			WHERE m.multi_desc LIKE CONCAT('%', #{keyword}, '%')
+		</when>
+	</choose>
+	</if>
+  </select>
+  
+  <!-- 查询菜单及子菜单下是否有资源 -->
+  <select id="selectHasContent" parameterType="long" resultType="string">
+  	SELECT IF (COUNT(*) > 0, 'Y', 'N') AS HasContent
+	FROM menu_source
+	WHERE FIND_IN_SET(menu_id, findChildList(#{menuId}))
+  </select>
+  
+  
+  <!-- 修改menu_id为null -->
+  <update id="updateMenuIdNull" parameterType="Long">
+  	update menu_source set menu_id = null where menu_id = #{menuId}
+  </update>
+  
+  <!-- 根据sourceId更新 -->
+  <update id="updateBySourceId">
+  	update menu_source set menu_id = #{menuId} where source_type = #{sourceType} and source_id = #{sourceId}
+  </update>
+  
+  <delete id="deleteBySourceId">
+    DELETE FROM  menu_source WHERE source_type = #{sourceType} and source_id = #{sourceId}
+  </delete>
+</mapper>

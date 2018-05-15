@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.BookSectionMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.BookSection">
+		<!-- WARNING - @mbg.generated -->
+		<id column="book_section_id" property="bookSectionId" jdbcType="BIGINT" />
+		<result column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+		<result column="isbn" property="isbn" jdbcType="VARCHAR" />
+		<result column="is_try" property="isTry" jdbcType="SMALLINT" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content_length" property="contentLength"
+			jdbcType="INTEGER" />
+		<result column="try_length" property="tryLength" jdbcType="INTEGER" />
+		<result column="try_content" property="tryContent" jdbcType="LONGVARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+		<result column="link" property="link" jdbcType="LONGVARCHAR" />
+		<result column="dir_code" property="dirCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BookSectionDTOMap" extends="BaseResultMap"
+		type="com.lgsc.cjbd.book.dto.BookSectionDTO">
+		<result column="pageNum" property="pageNum" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 修改book_dir_id为null -->
+	<update id="updateBookDirNull" parameterType="Long">
+		update
+		book_section
+		set book_dir_id = null where book_dir_id = #{bookDirId}
+	</update>
+
+	<!-- 根据isbn查询一级或二级章节 -->
+	<select id="selectByIsbn2" resultMap="BaseResultMap">
+		SELECT @rownum:=@rownum+1 AS
+		pageNum, bs.* FROM book_section bs
+		LEFT JOIN book_dir bd ON
+		bs.`book_dir_id` = bd.`book_dir_id`, (SELECT
+		@rownum:=0) rn
+		WHERE
+		((bd.`parent_book_dir_id` = 0 AND bd.`has_leaf` = 0) OR
+		CHAR_LENGTH(bs.dir_code) = 6 )
+		AND bs.isbn = #{isbn}
+		ORDER BY
+		bs.dir_code
+	</select>
+
+	<!-- 根据isbn和bookDirId 查询具体章节 -->
+	<select id="selectByBookDirId2" parameterType="map" resultMap="BookSectionDTOMap">
+		SELECT * FROM (SELECT @rownum:=@rownum+1 AS pageNum,
+		bs.* FROM
+		book_section bs LEFT JOIN book_dir bd ON bs.`book_dir_id` =
+		bd.`book_dir_id`
+		,(SELECT @rownum:=0) rn
+		WHERE ((bd.`parent_book_dir_id`
+		= 0 AND bd.`has_leaf` = 0)
+		OR CHAR_LENGTH(bs.dir_code) = 6 )
+		AND bs.isbn
+		= #{isbn} ORDER BY bs.dir_code ) bsn
+		WHERE bsn.book_dir_id = #{bookDirId}
+	</select>
+	
+	<!-- 根据isbn查询叶子节点章节 -->
+	<select id = "selectByIsbn" resultMap="BaseResultMap">
+		SELECT @rownum:=@rownum+1 AS pageNum, bs.* FROM
+		book_section bs LEFT JOIN book_dir bd ON bs.`book_dir_id` =	bd.`book_dir_id`
+		,(SELECT @rownum:=0) rn
+		WHERE  bd.`has_leaf` = 0
+		AND bs.isbn = #{isbn} 
+		ORDER BY bs.dir_code
+	</select>
+	
+	<!-- 根据bookDirId和isbn查询叶子节点章节 -->
+	<select id="selectByBookDirId" parameterType="map" resultMap="BookSectionDTOMap">
+		SELECT * from (SELECT @rownum:=@rownum+1 AS pageNum, bs.* FROM
+		book_section bs LEFT JOIN book_dir bd ON bs.`book_dir_id` =	bd.`book_dir_id`
+		,(SELECT @rownum:=0) rn
+		WHERE  bd.`has_leaf` = 0
+		AND bs.isbn = #{isbn} ORDER BY bs.dir_code ) bsn
+		WHERE bsn.book_dir_id = #{bookDirId}
+	</select>
+	
+	<!-- 查询章节总数 -->
+	<select id="selectCountByIsbn" parameterType="string" resultType="int" >
+		select count(*) total from book_section bs LEFT JOIN book_dir bd ON bs.`book_dir_id` =	bd.`book_dir_id`
+		WHERE  bd.`has_leaf` = 0 and bs.isbn = #{isbn}
+	</select>
+	
+	<!-- 查询 试读 -->
+	<select id="selectTry" parameterType="Long" resultType="com.lgsc.cjbd.book.model.BookSection">
+		SELECT bs.* FROM
+		book_section bs LEFT JOIN book_dir bd ON bs.`book_dir_id` =
+		bd.`book_dir_id` WHERE bd.parent_book_dir_id = 0
+		AND
+		bs.`book_section_id` = #{bookSectionId}
+	</select>
+	
+
+	<!-- 根据 bookDirId 查询同级章节  --> 
+	<select id="selectSiblingList" parameterType="Long" resultMap="BaseResultMap">
+		select  bs.* from book_section bs
+		left join book_dir bd on bs.`book_dir_id` = bd.book_dir_id
+		where
+		bd.parent_book_dir_id = (
+		select parent_book_dir_id from book_dir
+		where book_dir_id = #{bookDirId}
+		)
+		ORDER BY bs.dir_code
+	</select>
+	
+	<select id="selectTryLength">
+		select ifNull(try_length,0) from book_Section where book_section_id = #{bookSectionId}
+	</select>
+	
+	<!-- 根据目录id查询章节 -->
+	<select id="selectIsTry" parameterType="Long" resultMap="BaseResultMap">
+		select book_section_id ,is_try from book_section where book_dir_id = #{bookDirId}
+	</select>
+	
+</mapper>

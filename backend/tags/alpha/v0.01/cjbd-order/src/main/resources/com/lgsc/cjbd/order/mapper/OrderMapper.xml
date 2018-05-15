@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.order.mapper.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.order.model.Order" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="good_type" property="goodType" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DOUBLE" />
+    <result column="pay_status" property="payStatus" jdbcType="SMALLINT" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="pay_code_url" property="payCodeUrl" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 所有订单 -->
+  <resultMap id="OrderMap"  type="java.util.HashMap" >
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="unit_price" property="unitPrice" jdbcType="DOUBLE" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  	<result column="is_full" property="isFull" jdbcType="SMALLINT" />
+    <result column="amount" property="amount" jdbcType="DOUBLE" />
+    <result column="pay_status" property="payStatus" jdbcType="SMALLINT" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="pay_code_url" property="payCodeUrl" jdbcType="VARCHAR" />
+    <result column="consume_time" property="consumeTime" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <!-- vip订单Map -->
+  <resultMap id="VipOrderMap" extends="OrderMap" type="java.util.HashMap" >
+  	<result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="duration" property="duration" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- book订单Map -->
+  <resultMap id="BookOrderMap" extends="OrderMap" type="java.util.HashMap" >
+  	<result column="email" property="email" jdbcType="VARCHAR" />
+  	<result column="is_full" property="isFull" jdbcType="SMALLINT" />
+    <collection property="bookDirNames" javaType="ArrayList" column="order_no" ofType="java.util.HashMap" select="com.lgsc.cjbd.order.mapper.HisBookMapper.selectBookDirNames" fetchType="eager" >
+    </collection>
+  </resultMap>
+    
+  <sql id="conditionSQL">
+  	<if test="userId != null">
+		AND o.user_id = #{userId}
+	</if>
+  	<if test="condition != null">
+		AND CONCAT_WS( ',' , o.username , o.order_no ) like CONCAT('%',#{condition},'%')
+	</if>
+	<if test='orderDate != null and orderDate != ""'>
+		AND DATE_FORMAT(o.created_at,'%Y-%c-%d') = DATE_FORMAT(#{orderDate},'%Y-%c-%d')
+	</if>
+  </sql>
+  
+  <sql id="bookOrder">
+  	SELECT
+		DISTINCT o.order_id, o.order_no, o.created_at, hb.image_url, hb.book_name AS goods_name, o.good_type AS goods_type, hb.chapter_price AS unit_price, o.num, o.amount, o.pay_status, o.username, o.pay_code_url, hb.is_full
+	FROM `order` o
+	JOIN his_book hb ON o.order_no = hb.order_no AND o.good_type = 'book' AND o.pay_status IN (0,1)
+	<include refid="conditionSQL" />
+  </sql>
+  
+  <sql id="vipOrder">
+  	SELECT
+		DISTINCT o.order_id, o.order_no, o.created_at, hv.image_url, hv.`name` AS goods_name, o.good_type AS goods_type, hv.price AS unit_price, o.num, o.amount, o.pay_status, o.username, o.pay_code_url, '' as is_full
+	FROM `order` o
+	JOIN his_vip hv ON o.order_no = hv.order_no AND o.good_type = 'vip' AND o.pay_status IN (0,1)
+	<include refid="conditionSQL" />
+  </sql>
+
+  <!-- 条件查询订单 -->
+  <!-- orderType 商品类型 condition 收货人/订单号  orderDate 下单日期 -->
+  <select id="selectBy" resultMap="OrderMap">
+  	<choose>
+  		<when test='orderType == "book"'>
+  			<include refid="bookOrder" />
+  		</when>
+  		<when test='orderType == "vip"'>
+  			<include refid="vipOrder" />
+  		</when>
+  		<otherwise>
+  			<include refid="bookOrder" />
+			UNION
+			<include refid="vipOrder" />
+  		</otherwise>
+  	</choose>
+  	ORDER BY created_at DESC
+  </select>
+  
+  <!-- 查询图书订单详情 -->
+  <select id="selectBookOrderDetail" resultMap="BookOrderMap" parameterType="long">
+  	SELECT
+		o.order_id, o.order_no, o.created_at, hb.image_url, hb.book_name AS goods_name, o.good_type AS goods_type, hb.chapter_price AS unit_price, o.num, o.amount, o.pay_status, o.username, o.email, o.pay_code_url, hb.is_full,
+		TIMESTAMPDIFF(SECOND, o.created_at, NOW()) AS 'consume_time'
+	FROM `order` o
+	LEFT JOIN his_book hb ON o.order_no = hb.order_no
+	WHERE o.good_type = 'book' AND o.pay_status IN (0,1) AND o.order_id = #{orderId} GROUP BY o.order_id
+  </select>
+  
+  <!-- 查询vip订单详情 -->
+  <select id="selectVipOrderDetail" resultMap="VipOrderMap" parameterType="long">
+  	SELECT
+		o.order_id, o.order_no, o.created_at, hv.image_url, hv.`name` AS goods_name, o.good_type AS goods_type, hv.price AS unit_price, o.num,
+		o.amount, o.pay_status, o.username, o.email, o.pay_code_url, hv.duration, hv.end_date, TIMESTAMPDIFF(SECOND, o.created_at, NOW()) AS 'consume_time'
+	FROM
+		`order` o
+	LEFT JOIN his_vip hv ON o.order_no = hv.order_no
+	WHERE o.good_type = 'vip' AND o.pay_status IN (0,1) AND o.order_id = #{orderId}
+  </select>
+  
+  <!-- 修改订单状态 -->
+  <update id="updateOrderStatus">
+  	UPDATE `order` SET pay_status = #{payStatus,jdbcType=SMALLINT}, pay_time = #{payTime,jdbcType=TIMESTAMP} WHERE order_no = #{orderNo,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 将订单状态改为支付过时 -->
+  <update id="updateToOverStatus">
+  	<![CDATA[
+  	  UPDATE `order` SET pay_status = 3 WHERE pay_status = 0 AND TIMESTAMPDIFF(SECOND, created_at, NOW()) >= #{payOvertime}
+  	]]>
+  	  <if test="userId != null">
+  	  	AND user_id = #{userId}
+  	  </if>
+  </update>
+  
+</mapper>

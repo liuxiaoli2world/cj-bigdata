@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.UserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.UserRole" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_role_id" property="userRoleId" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+    <delete id="deleteRoleByuserId" parameterType="long" >
+     	 delete * from user_role where user_id=#{userId}
+     </delete>
+     <!-- 查询用户是否为质检员 -->
+    <select id="selectIsInspector" parameterType="long" resultType="int">
+		SELECT IF (COUNT(*), 1, 0)
+		FROM user_role ur
+		JOIN role r ON r.role_id = ur.role_id AND r.role_name = 'ROLE_INSPECTOR'
+		WHERE ur.user_id = #{userId}
+	</select>
+	
+	<select id="selectRoleUser" parameterType="int" resultType="int">
+	   select COUNT(user_id) from user_role WHERE role_id = #{role_id}
+	</select>
+	
+	<!-- 根据用户id查询用户角色状态 -->
+	<select id="selectVipStatus" parameterType="Long" resultType="String">
+		select r.role_name  from role r
+			inner JOIN user_role ur on ur.role_id = r.role_id
+		where ur.user_id = #{userId}
+	</select>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.UserBookMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.UserBook" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_book_dir_id" property="userBookDirId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 查询用户已购买的根目录 -->
+  <select id="selectRootDirsOfUser" resultType="long">
+  	SELECT book_dir_id
+	FROM user_book
+	WHERE user_id = #{userId} AND isbn = #{isbn}
+  </select>
+</mapper>

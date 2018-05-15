@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.BookChannelMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.BookChannel">
+		<!-- WARNING - @mbg.generated -->
+		<id column="book_channel_id" property="bookChannelId" jdbcType="BIGINT" />
+		<result column="isbn" property="isbn" jdbcType="VARCHAR" />
+		<result column="channel_id" property="channelId" jdbcType="BIGINT" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 根据图书isbn查询分类 -->
+	<select id="selectByIsbn" parameterType="string" resultType="com.lgsc.cjbd.book.model.Channel">
+		select c.* from book_channel bc join channel c on bc.channel_id = c.channel_id where bc.isbn = #{isbn}
+	</select>
+</mapper>

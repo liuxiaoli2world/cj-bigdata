@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.expert.mapper.ExpertMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.expert.model.Expert">
+		<!-- WARNING - @mbg.generated -->
+		<id column="expert_id" property="expertId" jdbcType="BIGINT" />
+		<result column="nation" property="nation" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="duty" property="duty" jdbcType="VARCHAR" />
+		<result column="professional_field" property="professionalField"
+			jdbcType="VARCHAR" />
+		<result column="is_recommend" property="isRecommend" jdbcType="SMALLINT" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="region" property="region" jdbcType="VARCHAR" />
+		<result column="expert_desc" property="expertDesc" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap extends="BaseResultMap" id="expertCompositionMap"
+		type="com.lgsc.cjbd.expert.model.Expert">
+		<collection column="expert_id" property="expertComposition"
+			ofType="com.lgsc.cjbd.expert.model.Composition"
+			select="com.lgsc.cjbd.expert.mapper.CompositionMapper.selectByExpertId"
+			fetchType="eager" />
+	</resultMap>
+
+	<resultMap type="java.util.HashMap" id="nameMap">
+		<id column="expert_id" property="expertId" jdbcType="BIGINT" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<!-- 根据id查询专家，结果返回专家著作 -->
+	<select id="selectExpertAndComposition" parameterType="Long"
+		resultMap="expertCompositionMap">
+		<include refid="selectAll" />
+		where e.expert_id=#{expertId}
+	</select>
+
+	<!-- 根据id查询专家信息 -->
+	<select id="selectExpertById" parameterType="Long" resultMap="BaseResultMap">
+		select * from expert where expert_id=#{expertId}
+	</select>
+
+	<!-- 查询推荐专家，结果返回专家著作 -->
+	<select id="selectRecommendExpertAndComposition" resultMap="expertCompositionMap">
+		<include refid="selectAll" />
+		where e.is_recommend = 1 order by e.updated_at desc
+	</select>
+
+	<!-- 根据专家姓名查询专家，结果返回专家著作 -->
+	<select id="selectExpertAndCompositionByName" parameterType="String"
+		resultMap="expertCompositionMap">
+		<include refid="selectAll" />
+		where e.real_name like
+		concat('%',#{realName},'%') order by e.updated_at
+		desc
+	</select>
+
+	<!-- 根据专家姓名查询专家信息 -->
+	<select id="selectExpertByName" parameterType="String"
+		resultMap="BaseResultMap">
+		select * from expert where real_name like
+		concat('%',#{realName},'%') order by updated_at desc
+	</select>
+
+	<!-- 查询所有专家和著作 -->
+	<select id="selectAllExpertAndComposition" resultMap="expertCompositionMap">
+		<include refid="selectAll" />
+		order by e.updated_at desc
+	</select>
+
+	<!-- 查询前20个专家姓名 -->
+	<select id="selectAllExpertName" resultMap="nameMap">
+		select expert_id
+		,real_name from expert order by updated_at desc limit 20
+	</select>
+
+	<!-- 查询所有专家信息 -->
+	<select id="selectAllExpert" resultMap="BaseResultMap">
+		select * from expert
+		order by updated_at desc
+	</select>
+
+	<!-- 根据专家id查找该专家的userId -->
+	<select id="selectUserIdByExpertId" parameterType="long"
+		resultType="long">
+		select user_id from expert where expert_id=#{expertId}
+	</select>
+
+	<!--根据userId查询专家 -->
+	<select id="selectExpertByuserId" parameterType="long"
+		resultMap="BaseResultMap">
+		select * from expert where user_id=#{userId}
+	</select>
+
+
+	<!-- 根据分类和姓名查询专家详情 -->
+	<select id="selectByClassifyAndRealName" resultMap="expertCompositionMap">
+		<include refid="selectAll" />
+		<trim prefix="where" prefixOverrides="and |or">
+			<if test="expertClassify != null">
+				d.name = #{expertClassify}
+			</if>
+			<if test="realName != null">
+				and e.real_name like CONCAT('%',#{realName},'%')
+			</if>
+		</trim>
+		ORDER BY e.updated_at desc
+	</select>
+
+	<sql id="selectAll">
+		select e.*,d.name from expert e left join expert_domain ed
+		on ed.expert_id = e.expert_id
+		left join domain d on d.domain_id =
+		ed.domain_id
+	</sql>
+
+</mapper>

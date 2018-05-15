@@ -1,0 +1,42 @@
+.ant-card-body {
+    padding: 0;
+}
+
+.left_legend{
+    color:#666666;
+    font-size:14px;
+    position: absolute;
+    left:82px;
+    top:40px;
+    span{
+        display:inline-block;
+        width:12px;
+        height: 12px;
+        margin-right:10px;
+        margin-left:42px;
+        &.pic{
+            background-color: #fd9dca;
+            margin-left:0;
+        }
+        &.audio{
+            background-color: #edc58c;
+        }
+        &.video{
+            background-color: #6fe2ec;
+        }
+    }
+}
+.right_legend{
+    color:#666666;
+    font-size:14px;
+    position: absolute;
+    left:43%;
+    top:36px;
+    span{
+        display:inline-block;
+        width:12px;
+        height: 12px;
+        background:#6b74a5;
+        margin-right:10px;
+    }
+}

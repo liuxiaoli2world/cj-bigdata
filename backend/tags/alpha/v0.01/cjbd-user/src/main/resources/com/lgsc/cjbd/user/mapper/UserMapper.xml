@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.UserMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.User">
+
+		<id column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="salt" property="salt" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="BIGINT" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="enable" property="enable" jdbcType="SMALLINT" />
+		<result column="seq_num" property="seqNum" jdbcType="INTEGER" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+		<result column="token_created_at" property="tokenCreatedAt"
+			jdbcType="TIMESTAMP" />
+		<result column="bg_token_created_at" property="bgTokenCreatedAt"/>
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap type="com.lgsc.cjbd.user.dto.UserResponseDto" id="UserResponseResultMap">
+		<id column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="enable" property="enable" jdbcType="SMALLINT" />
+		<result column="seq_num" property="seqNum" jdbcType="INTEGER" />
+		<result column="phone" property="phone" jdbcType="BIGINT" />
+		<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 用户管理dto -->
+	<resultMap type="com.lgsc.cjbd.user.dto.UserManagementDto"
+		id="UserManagementDTOResultMap">
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="enable" property="enable" jdbcType="SMALLINT" />
+		<result column="seq_num" property="seqNum" jdbcType="INTEGER" />
+		<association property="lastLoginTime" column="user_id"
+			jdbcType="TIMESTAMP"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectlastLoginTime">
+		</association>
+		<association property="countIp" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectCoutIp">
+		</association>
+		<association property="organizationName" column="seq_num"
+			select="com.lgsc.cjbd.user.mapper.OrganizationMapper.selectNameBySqeNum">
+		</association>
+		<association property="vipStatus" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.UserVipMapper.selectVipStatus">
+		</association>
+		<association property="isException" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectIsException">
+		</association>
+		<association property="isInspector" column="user_id"
+			javaType="int" select="com.lgsc.cjbd.user.mapper.UserRoleMapper.selectIsInspector">
+		</association>
+	</resultMap>
+	<!-- 用户登录详细resultMap -->
+	<resultMap type="com.lgsc.cjbd.user.dto.UserLoginDto" id="UserLoginDtoResultMap">
+		<id column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="enable" property="enable" jdbcType="SMALLINT" />
+		<result column="organizationName" property="organizationName" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<association property="endDate" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.UserVipMapper.selectEndDate"></association>
+		<association property="organizationName" column="seq_num"
+			select="com.lgsc.cjbd.user.mapper.OrganizationMapper.selectNameBySqeNum">
+		</association>
+		<association property="vipStatus" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.UserVipMapper.selectVipStatus">
+		</association>
+		<association property="isException" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectIsException">
+		</association>
+		<collection property="loginRecords" ofType="com.lgsc.cjbd.user.dto.UserLoginDto"
+			column="user_id" javaType="list"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectDtoByUserId">
+		</collection>
+	</resultMap>
+
+	<resultMap type="com.lgsc.cjbd.user.dto.UserIndexDto" id="UserIndexDtoResultMap">
+		<result property="date" column="date" />
+		<result property="countUser" column="countUser" />
+	</resultMap>
+
+	<!-- 机构会员用户详细ResultMap -->
+	<resultMap type="com.lgsc.cjbd.user.dto.UserOrganizationDto"
+		id="UserOrganizationDtoResultMap">
+		<result column="user_id" property="userId" jdbcType="BIGINT" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="enable" property="enable" jdbcType="SMALLINT" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<association property="lastLoginTime" column="user_id"
+			jdbcType="TIMESTAMP"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectlastLoginTime">
+		</association>
+		<association property="countIp" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectCoutIp">
+		</association>
+		<association property="vipStatus" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.UserVipMapper.selectVipStatus">
+		</association>
+		<association property="isException" column="user_id"
+			select="com.lgsc.cjbd.user.mapper.LoginRecordMapper.selectIsException">
+		</association>
+	</resultMap>
+
+	<!-- 根据邮箱，用户名，手机号查询用户 -->
+	<select id="findUserByTag" resultMap="BaseResultMap">
+		SELECT * From USER WHERE
+		username=#{Tag} OR email = #{Tag} OR phone = #{Tag}
+	</select>
+	<select id="getUserByName" parameterType="string" resultType="long">
+		SELECT user_id From USER WHERE
+		username=#{username}
+	</select>
+
+	<delete id="deleteBySqeNum" parameterType="int">
+		DELETE FROM USER WHERE
+		seq_num = #{id}
+	</delete>
+
+	<select id="selectCountBySeqNum" parameterType="int" resultType="int">
+		select count(*) as countUser from USER WHERE seq_num=#{id}
+	</select>
+
+	<select id="selectById" resultMap="UserResponseResultMap">
+		select
+		user_id,username,email,real_name,enable,seq_num,phone from USER where
+		user_id=#{id}
+	</select>
+
+	<select id="selectAllUserManagementDTO" resultMap="UserManagementDTOResultMap">
+		SELECT
+		*
+		FROM
+		`user` u
+		LEFT JOIN user_role ur ON u.user_id = ur.user_id
+		WHERE
+		ur.role_id NOT IN (100, 102)
+		OR ur.role_id IS NULL
+	</select>
+
+	<select id="selectUserLoginDto" resultMap="UserLoginDtoResultMap">
+		select * from user
+		where user_id=#{id}
+	</select>
+
+	<select id="selectUserForIndex" resultMap="UserIndexDtoResultMap">
+		SELECT
+		DATE_FORMAT(u.created_at,'%Y-%c-%d') as date,COUNT(user_id) as
+		countUser FROM user u WHERE DATE_FORMAT(u.created_at,'%Y-%c-%d')=
+		DATE_FORMAT(#{createdAt},'%Y-%c-%d')
+		ORDER BY u.created_at ASC
+	</select>
+
+	<select id="selectUserOrganization" resultMap="UserOrganizationDtoResultMap">
+		SELECT * FROM USER left join user_vip on user.user_id=user_vip.user_id
+		WHERE
+		seq_num=#{sqeNum} and user_vip.user_id is null
+	</select>
+
+	<!-- 后台条件查询用户 -->
+	<select id="selectBy" resultMap="UserManagementDTOResultMap">
+		SELECT * FROM user u
+		LEFT JOIN user_role ur ON u.user_id = ur.user_id
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="enable != null">
+				AND enable = #{enable}
+			</if>
+			<choose>
+				<when test="vipStatus == 0">
+					AND  u.user_id NOT IN (SELECT uv.user_id FROM user_vip uv)
+				</when>
+				<when test="vipStatus == 1">
+					<![CDATA[
+						AND u.user_id in (SELECT uv.user_id FROM user_vip uv WHERE
+						end_date >= NOW())
+					]]>
+				</when>
+				<when test="vipStatus == 2">
+					<![CDATA[
+						AND u.user_id in (SELECT uv.user_id FROM user_vip uv WHERE
+						uv.end_date < NOW())
+					]]>
+				</when>
+			</choose>
+			<if test='organization != null and organization != "" '>
+				AND seq_num in (SELECT seq_num FROM organization WHERE
+				name LIKE CONCAT("%",#{organization},"%"))
+			</if>
+			<if test='username !=null and username!= " " '>
+				AND u.user_id in (SELECT u.user_id FROM user u WHERE  u.username LIKE CONCAT("%",#{username},"%"))
+			</if>
+			AND (ur.role_id NOT IN (100, 102)
+		        OR ur.role_id IS NULL)
+		</trim>
+		ORDER BY u.created_at DESC
+	</select>
+
+</mapper>

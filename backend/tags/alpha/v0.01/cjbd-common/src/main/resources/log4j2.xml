@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="error">
+	<!-- 彩色日志，使用了org.springframework.boot.logging.log4j2.ColorConverter -->
+    <Properties>
+		<Property name="PID">????</Property>
+		<Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+		<Property name="LOG_LEVEL_PATTERN">%5p</Property>
+		<Property name="CONSOLE_LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{${LOG_LEVEL_PATTERN}} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+		<Property name="FILE_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN} ${sys:PID} --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+		<Property name="A_LOG_PATTERN">%d{HH:mm:ss.SSS} %clr{${LOG_LEVEL_PATTERN}} %class{36} %clr{%L}{magenta} %clr{%M}{cyan} - %msg%n%xEx</Property>
+	</Properties>
+
+	<!-- 先定义所有的appender -->
+	<appenders>
+		<!-- 这个输出控制台的配置 -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<!-- 控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<!-- 这个都知道是输出日志的格式 -->
+			<PatternLayout pattern="${sys:A_LOG_PATTERN}" />
+		</Console>
+		
+		<Console name="Detail" target="SYSTEM_OUT">
+			<ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL" />
+			<ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${sys:A_LOG_PATTERN}" />
+		</Console>
+
+		<!-- 添加过滤器ThresholdFilter,可以有选择的输出某个级别以上的类别 onMatch="ACCEPT" onMismatch="DENY"意思是匹配就接受,否则直接拒绝 -->
+		<RollingFile name="Error" fileName="logs/error.log" filePattern="logs/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
+			<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%n%xEx" />
+			<SizeBasedTriggeringPolicy size="10MB" />
+		</RollingFile>
+
+		<!-- 这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档 -->
+		<RollingFile name="Web" fileName="logs/web.log" filePattern="logs/$${date:yyyy-MM}/web-%d{yyyy-MM-dd}-%i.log.gz">
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%n%xEx" />
+			<SizeBasedTriggeringPolicy size="10MB" />
+		</RollingFile>
+	</appenders>
+
+	<!-- 然后定义logger，只有定义了logger并引入的appender，appender才会生效 -->
+	<loggers>
+		<!-- 建立一个默认的root的logger -->
+		<root level="trace">
+			<appender-ref ref="Console" />
+			<appender-ref ref="Error" />
+			<appender-ref ref="Web" />
+		</root>
+		
+		<!-- 打印SQL信息 -->
+		<logger name="com.lgsc" level="trace">
+			<appender-ref ref="Detail" />
+		</logger>
+	</loggers>
+
+</configuration>

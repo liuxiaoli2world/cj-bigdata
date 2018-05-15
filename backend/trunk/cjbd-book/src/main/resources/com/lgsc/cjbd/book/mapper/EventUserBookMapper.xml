@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.EventUserBookMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.EventUserBook" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="event_user_book_id" property="eventUserBookId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="book_dir_id" property="bookDirId" jdbcType="BIGINT" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="pay_status" property="payStatus" jdbcType="SMALLINT" />
+    <result column="push_status" property="pushStatus" jdbcType="SMALLINT" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>

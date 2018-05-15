@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.AllowMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.Allow">
+		<!-- WARNING - @mbg.generated -->
+		<id column="allow_id" property="allowId" jdbcType="BIGINT" />
+		<result column="parent_allow_id" property="parentAllowId"
+			jdbcType="BIGINT" />
+		<result column="allow_name" property="allowName" jdbcType="VARCHAR" />
+		<result column="allow_value" property="allowValue" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+	
+
+   <!-- 查询所有子权限 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from allow where parent_allow_id!=0
+	</select>
+	<select id="findByUserId" resultMap="BaseResultMap">
+		SELECT
+		a.allow_id,
+		a.parent_allow_id,
+		a.allow_name,
+		a.allow_value
+		FROM
+		allow a
+		LEFT JOIN role_allow ra ON a.allow_id = ra.allow_id
+		LEFT JOIN user_role ur ON ra.role_id = ur.role_id
+		WHERE
+		ur.user_id = #{id}
+	</select>
+    
+    <select id="findByRoleId" resultMap="BaseResultMap">
+    	SELECT
+		a.allow_id,
+		a.parent_allow_id,
+		a.allow_name,
+		a.allow_value
+		FROM
+		allow a
+		LEFT JOIN role_allow ra ON a.allow_id = ra.allow_id
+		WHERE ra.role_id = #{roleId}
+    </select>
+</mapper>

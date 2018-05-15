@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.Menu" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="menu_id" property="menuId" jdbcType="BIGINT" />
+    <result column="parent_menu_id" property="parentMenuId" jdbcType="BIGINT" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="is_display" property="isDisplay" jdbcType="SMALLINT" />
+    <result column="is_menu" property="isMenu" jdbcType="SMALLINT" />
+    <result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <!-- 根据菜单id查询祖先节点，不包括当前目录 -->
+  <select id="selectParentList" resultMap="BaseResultMap">
+  	select * from menu where find_in_set(menu_id, findParentList(#{menuId})) and menu_id != #{menuId}
+  </select>
+  
+    <!-- 根据菜单id查询后代节点，不包括当前目录 -->
+  <select id="selectChildList" resultMap="BaseResultMap">
+  	select * from menu where find_in_set(menu_id, findChildList(#{menuId})) and menu_id != #{menuId}
+  </select>
+  
+  <!-- 根据目录id查询子目录 -->
+  <select id="selectChild" parameterType="Long" resultMap="BaseResultMap">
+  	select a.* from menu a inner join menu b on a.parent_menu_id = b.menu_id where b.menu_id = #{menuId}
+  </select>
+  
+</mapper>

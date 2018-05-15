@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.MultifileMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.Multifile">
+		<!-- WARNING - @mbg.generated -->
+		<id column="multifile_id" property="multifileId" jdbcType="BIGINT" />
+		<result column="multi_type" property="multiType" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="multi_desc" property="multiDesc" jdbcType="VARCHAR" />
+		<result column="full_price" property="fullPrice" jdbcType="DOUBLE" />
+		<result column="is_download" property="isDownload" jdbcType="SMALLINT" />
+		<result column="detail" property="detail" jdbcType="VARCHAR" />
+		<result column="scene" property="scene" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="PicMap" type="java.util.HashMap">
+		<result column="multifile_id" property="multifileId" jdbcType="BIGINT" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="multi_desc" property="multiDesc" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<resultMap id="MultifileWithCoverMap" type="java.util.HashMap">
+		<result column="multifile_id" property="multifileId" jdbcType="BIGINT" />
+		<result column="multi_type" property="multiType" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="pmenu_name" property="pMenuName" jdbcType="VARCHAR" />
+		<result column="cmenu_name" property="cMenuName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<!-- multifile详情 -->
+	<resultMap id="FileDetail" extends="BaseResultMap" type="java.util.HashMap">
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="cmenu_id" property="cmenuId" jdbcType="BIGINT" />
+		<result column="pmenu_name" property="pMenuName" jdbcType="VARCHAR" />
+		<result column="pmenu_id" property="pmenuId" jdbcType="BIGINT" />
+		<result column="cmenu_name" property="cMenuName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectBy" resultMap="MultifileWithCoverMap">
+		SELECT
+			mf.multifile_id,
+			mf.multi_type,
+			mf.title,
+			mi.path,
+			(
+				CASE
+				WHEN mf.scene = '1' THEN
+					'YES'
+				ELSE
+					'NO'
+				END
+			) AS is_index,
+			m.menu_name AS cmenu_name,
+			m2.menu_name AS pmenu_name
+		FROM
+			multifile mf,
+			multiitem mi,
+			menu_source ms,
+			menu m
+		JOIN menu m2 ON m.parent_menu_id = m2.menu_id
+		WHERE
+			mf.multifile_id = mi.multifile_id
+		AND mi.scene = '1'
+		AND ms.source_id = mf.multifile_id
+		AND ms.menu_id = m.menu_id
+		AND ms.source_type = 'multifile'
+		<if test="multiType!=null">
+			AND mf.multi_type = #{multiType}
+		</if>
+		<if test="keyword!=null">
+			AND mf.title like concat('%', #{keyword}, '%')
+		</if>
+		<if test='parentMenuId!=null and childMenuId!=null'>
+			AND m.menu_id = #{childMenuId} AND m2.menu_id = #{parentMenuId}
+		</if>
+		<if test='parentMenuId!=null and childMenuId==null'>
+			AND find_in_set(m.menu_id, findChildList(#{parentMenuId}))
+		</if>
+		ORDER BY mf.updated_at desc
+	</select>
+	
+	<!-- 查询 multifile 详情 -->
+	<select id="selectById" resultMap="FileDetail" parameterType="long">
+		SELECT
+			mf.*,
+			mi.path, 
+			m.menu_id AS cmenu_id,
+			m.menu_name AS cmenu_name,
+			m2.menu_id AS pmenu_id,
+			m2.menu_name AS pmenu_name
+		FROM
+			multifile mf,
+			multiitem mi,
+			menu_source ms,
+			menu m
+		JOIN menu m2 ON m.parent_menu_id = m2.menu_id
+		WHERE
+			mf.multifile_id = mi.multifile_id
+		AND mi.scene = '1'
+		AND ms.source_id = mf.multifile_id
+		AND ms.menu_id = m.menu_id
+		AND ms.source_type = 'multifile'
+		AND mf.multifile_id = #{multifileId}
+	</select>
+
+	<!-- 根据菜单id查询相册 (封面) -->
+	<select id="selectPicByMeauId" resultMap="PicMap">
+		SELECT
+		m.multifile_id,m.title,m.multi_desc,mi.path
+		FROM
+		multifile m
+		INNER JOIN
+		multiitem mi ON m.multifile_id=mi.multifile_id AND mi.scene=1 
+		AND m.multi_type = "pic" 
+		<if test="menuId != null ">
+			INNER JOIN menu_source ms ON m.multifile_id = ms.source_id
+			WHERE ms.source_type = "multifile"
+			and ms.menu_id = #{menuId}
+		</if>
+		<if test="menuPId != null and menuId == null">
+			INNER JOIN menu_source ms ON m.multifile_id = ms.source_id
+			WHERE ms.source_type = "multifile"
+			and find_in_set(ms.menu_id,findChildList(#{menuPId}))
+		</if>
+		ORDER BY mi.updated_at desc
+	</select>
+
+  <!-- 根据相册id查询相册 -->
+  <select id="selectPicByMultifileId" parameterType="long"  resultMap="PicMap">
+		SELECT
+		m.multifile_id,mi.path,m.title
+		FROM
+		multifile m
+		INNER JOIN multiitem mi ON mi.scene=1 AND mi.multifile_id=m.multifile_id AND mi.multifile_id=#{multifileId}  
+	</select>
+ 
+  <!-- 根据多媒体id查询多媒体标题-->
+  <select id="selectTitleById" parameterType="long" resultType="string">
+		SELECT
+		title
+		FROM
+		multifile
+		WHERE multifile_id=#{multifileid}
+	</select>
+	
+	<!-- 查询首页视频热点 -->
+	<select id="selectIndexVideo" resultMap="PicMap">
+		SELECT mf.multifile_id, mf.title, mi.path,mf.multi_desc
+		FROM multifile mf
+		LEFT JOIN multiitem mi ON mf.multifile_id = mi.multifile_id AND mi.scene = '1'
+		WHERE mf.scene = '1' limit 1
+	</select>
+	<update id="setOtherSceneZero">
+		UPDATE multifile SET scene = '0'
+	</update>
+</mapper>

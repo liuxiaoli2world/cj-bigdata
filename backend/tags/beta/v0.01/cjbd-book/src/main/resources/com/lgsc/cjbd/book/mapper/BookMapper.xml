@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.BookMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.Book">
+		<!-- WARNING - @mbg.generated -->
+		<id column="book_id" property="bookId" jdbcType="BIGINT" />
+		<result column="book_name" property="bookName" jdbcType="VARCHAR" />
+		<result column="press" property="press" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="translator" property="translator" jdbcType="VARCHAR" />
+		<result column="isbn" property="isbn" jdbcType="CHAR" />
+		<result column="release_date" property="releaseDate" jdbcType="TIMESTAMP" />
+		<result column="full_price" property="fullPrice" jdbcType="DOUBLE" />
+		<result column="chapter_price" property="chapterPrice"
+			jdbcType="DOUBLE" />
+		<result column="is_try" property="isTry" jdbcType="SMALLINT" />
+		<result column="is_release" property="isRelease" jdbcType="SMALLINT" />
+		<result column="is_recommend" property="isRecommend" jdbcType="SMALLINT" />
+		<result column="book_desc" property="bookDesc" jdbcType="VARCHAR" />
+		<result column="book_detail" property="bookDetail" jdbcType="VARCHAR" />
+		<result column="keyword" property="keyword" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap id="BookWithImageMenuAndChannelMap" type="java.util.HashMap" extends="BaseResultMap">
+		<result column="menu_id" property="menuId" jdbcType="BIGINT" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="parent_menu_id" property="parentMenuId" jdbcType="BIGINT" />
+		<result column="parent_menu_name" property="parentMenuName" jdbcType="VARCHAR" />
+		<result column="channel_id" property="channelId" jdbcType="BIGINT" />
+		<result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+		<collection property="bookImages" column="isbn" ofType="com.lgsc.cjbd.book.model.BookImage" fetchType="eager" select="com.lgsc.cjbd.book.mapper.BookImageMapper.selectByIsbn">
+		</collection>
+	</resultMap>
+	
+	<sql id="oneSimpleSelect">
+		SELECT
+			b.*, m.menu_id AS menu_id,
+			m.menu_name AS menu_name,
+			m2.menu_id AS parent_menu_id,
+			m2.menu_name AS parent_menu_name,
+			c.channel_id,c.channel_name
+		FROM
+			book b
+		LEFT JOIN menu_source ms ON b.book_id = ms.source_id
+		AND ms.source_type = 'book'
+		LEFT JOIN menu m ON ms.menu_id = m.menu_id
+		LEFT JOIN menu m2 ON m.parent_menu_id = m2.menu_id
+		LEFT JOIN book_channel bc ON bc.isbn = b.isbn
+		LEFT JOIN channel c ON bc.channel_id = c.channel_id
+	</sql>
+	
+	<!-- 查询图书并返回图片和菜单 -->
+	<select id="selectById" resultMap="BookWithImageMenuAndChannelMap" parameterType="long">
+		<include refid="oneSimpleSelect" />
+		WHERE b.book_id = #{bookId}
+	</select>
+	
+	<!-- 按条件查询图书。结果附带图片 -->
+	<select id="selectBy" resultMap="BookWithImageMenuAndChannelMap" parameterType="map">
+		<include refid="oneSimpleSelect" />
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test=' realname != null and realname != "" '>
+				and b.author LIKE CONCAT('%', #{realname}, '%')
+			</if>
+			<if test=' childMenuId != null '>
+				and m.menu_id = #{childMenuId}
+			</if>
+			<if test=' childMenuId == null and parentMenuId != null'>
+				and find_in_set(m2.menu_id, findChildList(#{parentMenuId}))
+			</if>
+			<if test="channelId != null">
+				and bc.channel_id = #{channelId}
+			</if>
+			<if test='keyword != null'>
+				and CONCAT_WS(',',b.book_name,b.author,b.keyword) like concat('%',#{keyword},'%')
+			</if>
+			<if test="isRelease != null">
+				and b.is_release = #{isRelease}
+			</if>
+		</trim>
+		order by updated_at desc
+	</select>
+
+</mapper>

@@ -1,0 +1,230 @@
+.ant-popover{
+    position:fixed;
+}
+.ant-collapse{
+    border:none;
+    background: transparent;
+}
+:root .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow{
+    left:5px;
+}
+.ant-collapse > .ant-collapse-item > .ant-collapse-header{
+    padding-left:24px;
+}
+.ant-collapse > .ant-collapse-item > .ant-collapse-header{
+    border-bottom:1px dashed #e3e3e3;
+}
+.ant-collapse > .ant-collapse-item{
+    border:none;
+}
+.ant-collapse-content > .ant-collapse-content-box{
+    padding:0;
+}
+.ant-collapse-content{
+    background:#f4f4f4
+}
+
+.ant-collapse > .ant-collapse-item.noChild > .ant-collapse-header .arrow:before{
+    transform: scale(0);
+}
+.ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow:before{
+    content:"\E645";
+    transform: scale(1.2);
+    font-weight: normal;
+    color: #333;
+}
+.ant-collapse > .ant-collapse-item > .ant-collapse-header[aria-expanded="true"] .arrow:before{
+    content: '\E621';
+}
+.ant-collapse > .ant-collapse-item > .ant-collapse-header[aria-expanded="true"] .arrow{
+    transform: scale(0.75) rotate(0deg);
+}
+.chapterName{
+    line-height: 14px;
+    span{
+        display: block;        
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 400px;
+    }
+}
+.read_content{
+    p{
+        font-size: 16px;
+        color: #333;
+        word-wrap: break-word;
+    }
+    .common-para{
+        text-indent: 2em;
+    }
+    .author-affiliation,.info-authors{
+        text-align: center;
+        text-align: center;
+        margin-top: -15px;
+        margin-bottom: 15px;
+        font-size: 20px;
+        font-family: '宋体';
+        span:first-child{
+            margin-right: 20px;
+        }
+    }
+    .chapter-abstract,.chapter-keywords{
+        font-family: '楷体';
+        text-indent: 2rem;
+        color: #333;
+        font-size: 16px;
+        line-height: 30px;
+        .zhai,.yao,.keywords{
+            display: inline-block;
+            font-weight: 700;
+            font-family: '微软雅黑';
+            text-indent: 0;
+            &.zhai{
+                margin-right: 20px;
+            }
+
+        }
+    }
+    .formerAidText,.chapter,.part{
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 25px 0;
+    }
+    .section{
+        font-size: 18px;
+        font-weight: bold;
+        margin: 25px 0;
+    }
+    .backAidText{
+        margin-top:20px;
+        text-align: center;
+        font-size: 18px;
+        line-height: 32px;
+    }
+    .table-title{
+        text-align: center;
+        position: relative;
+        font-size: 14px;
+        font-weight: bold;
+        .table-title-0{
+            position:absolute;
+            left:0;
+            text-indent: 1em;
+        }
+    }
+    .continued-table-title{
+        text-align: right;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .annotation{
+        font-size:14px;
+        text-indent: 2em;
+    }
+    img{
+        max-width: 100%;
+        vertical-align: middle;
+        &[role='3']{
+            max-height: 65px;
+        }
+    }
+    .img-title,.picdesc{
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .picdesc{
+        font-size: 12px;
+        line-height: 25px;
+    }
+
+}
+.tryTips{
+    background: rgb(252, 243, 238);
+    text-align: center;
+    p{
+        font-size: 16px;
+        color: #999;
+        line-height: 24px;
+        padding-bottom: 36px;
+    }
+    .ant-btn{
+        background: #3d95d5;
+        color:#fff;
+        font-size: 14px;
+        border-color: transparent;
+        width: 80px;
+        height: 32px;
+        border-radius: 2px;
+        margin-bottom: 25px;
+    }
+}
+.nextPage{
+    text-align: center;
+    cursor: pointer;
+    background: rgb(252, 243, 238);
+    padding-top: 30px;
+}
+.ant-spin-nested-loading{
+    top: -8px;
+}
+.myList{
+    p{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+.readBtns {
+    background: rgb(252, 243, 238);
+    text-align: center;
+    padding-bottom: 20px;
+    .readBtn{
+        display: inline-block;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        margin-right: 20px;
+        line-height:30px;
+        width: 80px;
+        cursor: pointer;
+        &:hover{
+            color: rgba(0, 0, 0, 0.65);
+        }
+        &:last-child{
+            margin-right: 0;
+        }
+    }
+}
+.icons{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    span{
+        display: block;
+        width: 50px;
+        height: 50px;
+        margin: 0;
+        background: #fff;
+        border-bottom: 1px solid #d6cab9;
+        text-align: center;
+        &.Iactive{
+            background: #f4f4f4;
+            width: 51px;
+        }
+        img{
+            margin-top: 18px;
+        }
+    }
+}
+.searchBox{
+    padding: 10px;
+    position: fixed;
+    top: 150px;
+    left: 60px;
+    border-radius: 3px;
+    background: #fff;
+}

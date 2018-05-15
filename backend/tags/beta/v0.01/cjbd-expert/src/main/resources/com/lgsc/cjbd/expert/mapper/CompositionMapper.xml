@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.expert.mapper.CompositionMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.expert.model.Composition" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="composition_id" property="compositionId" jdbcType="BIGINT" />
+    <result column="expert_id" property="expertId" jdbcType="BIGINT" />
+    <result column="composition_name" property="compositionName" jdbcType="VARCHAR" />
+    <result column="composition_link" property="compositionLink" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <select id="selectByExpertId" parameterType="Long" resultMap="BaseResultMap">
+		select * from composition where expert_id = #{expertId} 
+	</select>
+</mapper>

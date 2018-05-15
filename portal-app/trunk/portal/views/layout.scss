@@ -1,0 +1,49 @@
+$baseFontSize:      14px !default;
+$gray:              #ccc !default;
+//将px转换成rem
+@function pxToRem($px) {
+  @return $px / $baseFontSize * 1rem;
+}
+
+html,
+body{
+    background-color: white;
+    font-size:$baseFontSize; 
+}
+
+footer{
+    
+       .footer_head{
+        width:100%;
+        min-width:1000px;
+        height:45px;
+        line-height: 45px;
+        background:#3d95d5;
+        color:#ffffff;
+        .content{
+            text-align: center;
+            a{
+                color:#ffffff;
+                padding:0 10px;
+            }
+        }
+    }
+    .footer_con{
+        .content{
+           padding-top:32px;
+           line-height: 30px;
+           text-align: center;
+           color:#333333;
+           .copyright{
+               margin-left:335px;
+               padding-bottom:20px
+           }
+           .footer_logo{
+               width:44px;
+               height:60px;
+               margin-left:25px;
+               background:url('~assets/images/footer_logo.png') no-repeat right center;
+           }
+        }       
+    }
+}

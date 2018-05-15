@@ -1,0 +1,47 @@
+
+#启用配置服务
+spring:
+  cloud:
+    config:
+      enabled: true
+      discovery:
+        enabled: true
+        service-id: cjbd-configserver
+      name: common
+
+#启动注册服务
+eureka:
+  host: localhost
+  port: 7100
+  client:
+    service-url:
+      defaultZone: http://${eureka.host:localhost}:${eureka.port:9091}/eureka
+  instance:
+    lease-expiration-duration-in-seconds: 4
+    lease-renewal-interval-in-seconds: 3
+    metadata-map:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+zuul:
+  routes:
+    book:
+      path: /book/**
+      service-id: cjbd-book
+      strip-prefix: false
+    expert:
+      path: /expert/**
+      service-id: cjbd-expert
+      strip-prefix: false
+    order:
+      path: /order/**
+      service-id: cjbd-order
+      strip-prefix: false
+    user:
+      path: /user/**
+      service-id: cjbd-user
+      strip-prefix: false
+  prefix: /api
+  sensitive-headers:
+    
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.HotWordMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.HotWord" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="hot_word_id" property="hotWordId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="weight" property="weight" jdbcType="DECIMAL" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+   <!-- 随机返回8个热词 -->
+  <select id="selectRandom"   resultMap="BaseResultMap">
+		select
+		*
+		from
+		hot_word order by rand() LIMIT 8
+	</select>
+</mapper>

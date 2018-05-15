@@ -1,0 +1,11 @@
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+    background: white;
+    color: black;
+}
+
+.ant-select-selection--single {
+    border-radius: 0;
+}
+.ant-input,.ant-calendar{
+    border-radius: 0;
+}

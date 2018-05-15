@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.ContentMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.Content">
+		<id column="content_id" property="contentId" jdbcType="BIGINT" />
+		<result column="content_type" property="contentType" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />
+		<result column="content_desc" property="contentDesc" jdbcType="VARCHAR" />
+		<result column="is_original" property="isOriginal" jdbcType="SMALLINT" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="pv" property="pv" jdbcType="INTEGER" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="keyword" property="keyword" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="publication_date" property="publicationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="body" property="body" jdbcType="LONGVARCHAR" />
+	</resultMap>
+
+	<resultMap type="com.lgsc.cjbd.book.dto.HistoryDto" id="HistoryResultMap">
+	 	<result column="content_id" property="contentId" jdbcType="BIGINT"/>
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content_desc" property="contentDesc" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="PeriodicalMap" type="HashMap">
+		<id column="content_id" property="contentId" jdbcType="BIGINT" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 包含菜单的资讯 -->
+	<resultMap id="ContentWithMenu" type="java.util.HashMap">
+		<id column="content_id" property="contentId" jdbcType="BIGINT" />
+		<result column="content_type" property="contentType" jdbcType="VARCHAR" />
+		<result column="author" property="author" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />
+		<result column="content_desc" property="contentDesc" jdbcType="VARCHAR" />
+		<result column="is_original" property="isOriginal" jdbcType="SMALLINT" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="pv" property="pv" jdbcType="INTEGER" />
+		<result column="keyword" property="keyword" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="publication_date" property="publicationDate"
+			jdbcType="TIMESTAMP" />
+		<result column="body" property="body" jdbcType="LONGVARCHAR" />
+		<result column="menu_id" property="menuId" jdbcType="BIGINT" />
+		<result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+		<result column="parent_menu_id" property="parentMenuId"
+			jdbcType="BIGINT" />
+		<result column="parent_menu_name" property="parentMenuName"
+			jdbcType="VARCHAR" />
+		<collection property="contentAccssoryList" column="content_id"
+			ofType="com.lgsc.cjbd.book.model.ContentAccessory"
+			select="com.lgsc.cjbd.book.mapper.ContentAccessoryMapper.selectDownloadUrlById"
+			fetchType="eager">
+		</collection>
+	</resultMap>
+	
+	<resultMap extends="BaseResultMap" type="java.util.HashMap" id="ContentWithoutMenu">
+		<collection property="contentAccssoryList" column="content_id"
+			ofType="com.lgsc.cjbd.book.model.ContentAccessory"
+			select="com.lgsc.cjbd.book.mapper.ContentAccessoryMapper.selectDownloadUrlById"
+			fetchType="eager">
+		</collection>
+	</resultMap>
+
+	<!-- 根据id查询带菜单的资讯(m) --> 
+	<select id="selectById" parameterType="long" resultMap="ContentWithMenu">
+		SELECT
+		c.*, m.menu_id AS menu_id,
+		m.menu_name AS menu_name,
+		m2.menu_id AS
+		parent_menu_id,
+		m2.menu_name AS parent_menu_name
+		FROM
+		content c
+		LEFT JOIN
+		menu_source ms ON ms.source_id = c.content_id 
+		LEFT JOIN menu m ON ms.menu_id = m.menu_id
+		LEFT JOIN menu m2
+		ON m2.menu_id = m.parent_menu_id
+		where ms.source_type = 'content' 
+		and c.content_id = #{contentId}
+	</select>
+	
+	<!-- 根据id查询不带菜单的资讯 -->
+	<select id="selectByIdWithoutMenu" parameterType="long" resultMap="ContentWithoutMenu">
+		select * from content where content_id = #{contentId}
+	</select>
+
+	<select id="selectAllForIndex" resultMap="BaseResultMap">
+		SELECT * FROM content
+		WHERE content_type=#{flag}   
+		 <if test="keyword!=null">
+			AND
+			CONCAT(
+			IFNULL(title," "),
+			IFNULL(body," ")) LIKE
+			CONCAT("%",#{keyword},"%")
+		</if>
+		ORDER BY created_at DESC
+	</select>     
+
+	<insert id="insertConent" useGeneratedKeys="true" keyProperty="contentId"
+		parameterType="com.lgsc.cjbd.book.model.Content">
+		insert into content (content_type,author,title,rank,content_desc,body,is_original,
+		image_url,pv,created_by,created_at,updated_by,updated_at,keyword,publication_date,source) 
+		values(#{contentType},#{author},#{title},#{rank},#{contentDesc},#{body},#{isOriginal},
+		#{imageUrl},#{pv},#{createdBy},#{createdAt},#{updatedBy},#{updatedAt},#{keyword},#{publicationDate},#{source})
+	</insert>
+
+	<select id="selectByPvRank" resultMap="BaseResultMap">
+		SELECT * FROM content
+		WHERE content_type=#{contentType} ORDER BY pv DESC LIMIT 8
+	</select>
+
+	<select id="selectNewsByConditon" resultMap="BaseResultMap">
+		SELECT * FROM
+		content WHERE content_type=#{contentType}
+		<if test="condition!=null">
+			AND
+			CONCAT(
+			IFNULL(title," "),
+			IFNULL(body," ")) LIKE
+			CONCAT("%",#{condition},"%")
+		</if>
+		ORDER BY created_at DESC
+	</select>
+
+	<select id="selectPeriodicalByMeauId" resultMap="BaseResultMap">
+		SELECT
+		c.*
+		FROM
+		content c
+		<if test="menuId!=null">
+			INNER JOIN menu_source ms ON c.content_id = ms.source_id
+			WHERE ms.source_type = "content" AND ms.menu_id = #{menuId} and c.content_type="periodical"
+		</if>
+		<if test="menuPId!=null and  menuId==null">
+			INNER JOIN menu_source ms ON c.content_id = ms.source_id
+			WHERE ms.source_type = "content" AND
+			find_in_set(ms.menu_id,findChildList(#{menuPId})) and c.content_type="periodical"
+		</if>
+		<if test="keyword!=null">
+			AND CONCAT(
+			IFNULL(c.title, ''),
+			IFNULL(c.keyword, ''),
+			IFNULL(c.author, '')
+			) LIKE CONCAT("%", #{keyword}, "%")
+		</if>
+		ORDER BY publication_date 
+	</select>
+	
+	<select id="selectAllHistory" resultMap="HistoryResultMap">
+		select content_id,
+		content_desc,image_url ,title from content where
+		content_type="history"
+	</select>
+	<!-- 根据作者查询期刊名称 -->
+	<select id="selectPeriodicalByAuthor" parameterType="string"
+		resultMap="PeriodicalMap">
+		select content_id,title from content where
+		content_type="periodical" and
+		author=#{author}
+	</select>
+
+	<select id="getTotalPv" resultType="Integer">
+		SELECT SUM(pv) as totalPv
+		FROM content
+	</select>
+	<!-- 全文索引 -->
+	<select id="selectFullText" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		content c
+		WHERE
+		c.content_type = "periodical"
+		AND CONCAT(c.title,c.content_desc,c.body)
+		LIKE CONCAT("%",#{keyword},"%")
+	</select>
+	<!-- 热词搜索中的搜索 -->
+	<select id="selectForHotWords" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		content c
+		WHERE
+		c.content_type = "periodical"
+		<if test='title!=null'>
+			and c.title like CONCAT("%",#{title},"%")
+		</if>
+		<if test='author!=null'>
+			and c.author like CONCAT("%",#{author},"%")
+		</if>
+		<if test='keyword!=null'>
+			and c.keyword like CONCAT("%",#{keyword},"%")
+		</if>
+		<if test='orderBy==0'>
+			ORDER BY c.updated_at DESC
+		</if>
+		<if test='orderBy==1'>
+			ORDER BY c.publication_date DESC
+		</if>
+	</select>
+	<!-- 实时文章总数 -->
+	<select id="getTotalContent" resultType="Integer">
+		SELECT count(content_id)
+		as totalContent
+		FROM content
+	</select>
+	<select id="selectContentByCondition" resultMap="BaseResultMap">
+		SELECT * FROM
+		content WHERE content_type=#{contentType}
+		<if test="condition!=null">
+			AND
+			CONCAT(
+			IFNULL(title," "),
+			IFNULL(body," ")) LIKE
+			CONCAT("%",#{condition},"%")
+		</if>
+		ORDER BY created_at DESC
+	</select>
+
+
+</mapper>

@@ -1,0 +1,177 @@
+.buybox-modal {
+    .ant-modal {
+        width: 416px !important;
+        height: 600px;
+        color:#666;
+        .ant-modal-body{
+            .allList{
+                border-bottom:1px dotted #c0c0c0;
+            }
+            .buy{
+                font-size:14px;
+                .list-item,.total{
+                    width: 50%;
+                    margin: 8px 0;
+                    padding-right:8px;
+                    .price{
+                        color:#db3d0d;
+                        font-size:18px;
+                    }
+                }
+                .total{
+                    text-align: right;
+                }
+                .list-item.select{
+                    &.select{
+                       background:url('~assets/images/select.png') no-repeat 2px 3px;
+                    }
+                }
+            }
+        }
+        .list-item{
+            margin: 8px 0;
+            // &.select{
+            //     background:url('~assets/images/select.png') no-repeat 2px 2px;
+            // }
+            // &.isBuy{
+            //     background:url('~assets/images/select.png') no-repeat 2px 2px;
+            //     background-color: #eee;
+            // }
+            .checkbox{
+                position: relative;
+                display:inline-block;
+                width:10px;
+                height:10px;
+                border:1px solid #c0c0c0;
+                margin-right:12px;
+                img{
+                    position: absolute;
+                    top: -3px;
+                    left: 0;
+                }
+            }
+        
+        }
+    }
+    .ant-modal-header {
+        background: #3f93cd;
+    }
+    .ant-modal-footer {
+        text-align: center;
+        border-top: 0;
+        padding-bottom:30px;
+    }
+    .ant-modal-body {
+        height: 550px;
+        padding: 0;
+        transition: 1s; /*双面div翻转效果的时间*/
+        transform-style: preserve-3d; /*双面div的子元素可保持其3D位置*/
+        -moz-transform-style: preserve-3d;
+        position: relative;
+    }
+    .front, .back {
+        // backface-visibility:hidden; /*div背对屏幕时不可见*/
+        -webkit-backface-visibility:hidden;    /* Chrome 和 Safari */
+        -moz-backface-visibility:hidden;     /* Firefox */
+        // -ms-backface-visibility:hidden;  
+        position: absolute;
+        .allList{
+            height: 390px;
+        }
+    }
+    
+    .front {
+        width: calc(100% - 50px);
+        margin: 10px 32px 0px 18px;
+    }
+
+    .back {
+        width: 100%;
+        transform: rotateY(180deg); /*反面内容初始化为背对着屏幕的*/
+        -moz-transform:rotateY(180deg);     /* Firefox */
+        .orderTips{
+            margin: 25px 0 28px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            .endTime{
+                font-size: 16px;
+                color: #f08138;
+            }
+        }
+        .qrcode{
+            width: 152px;
+            height: 152px;
+            padding: 5px;
+            border: 1px solid #d5d5d5;
+            margin: 0 auto;
+        }
+        .wechatPay{
+            margin: 14px 0 51px;
+            text-align: center;
+        }
+        .footer{
+            color: #fff;
+            background: #3d95d5;
+            font-size: 14px;
+            height: 234px;
+            .warning{
+                padding: 25px 0 20px;
+                text-align: center;
+            }
+            p{
+                margin-left:32px;
+                line-height: 30px;
+            }
+            .buttons{
+                text-align: center;
+                margin-top:20px;
+                .ant-btn{
+                    width: 109px;
+                    height: 40px;
+                    font-size: 16px;
+                    color: #666;
+                    background: #f2f2f2;
+                    border-radius: 0;
+                    border-color: transparent;
+                    &.btn-ok{
+                        color: #fff;
+                        background: #f08138;
+                        margin-right: 30px;
+                    }
+                }
+            }
+        }
+    }
+
+    .ant-modal-content{
+        perspective: 600px;
+    }
+
+    .ant-modal-content.active .ant-modal-body {
+        transform: rotateY(180deg);
+    }
+    
+    .addOrder{
+        width: 90px;
+        height:40px;
+        line-height: 40px;
+        padding: 0;
+        background: #3d95d5;
+        font-size:16px;
+        border-radius: 2px;
+        float: right;
+        font-weight: bold;
+        margin: 18px 0 32px;
+    }
+}
+
+.personal .back{
+    transform: none;
+}
+.dlBtn{
+    position: absolute;
+    left: calc(50% - 50px);
+    top: 120px;
+    width: 100px;
+}

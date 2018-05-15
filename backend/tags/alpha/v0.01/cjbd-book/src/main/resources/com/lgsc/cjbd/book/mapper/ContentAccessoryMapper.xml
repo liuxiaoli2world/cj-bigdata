@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.ContentAccessoryMapper" >
+  <resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.ContentAccessory" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="content_accessory_id" property="contentAccessoryId" jdbcType="BIGINT" />
+    <result column="content_id" property="contentId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="size" property="size" jdbcType="VARCHAR" />
+    <result column="accessory_url" property="accessoryUrl" jdbcType="VARCHAR" />
+    <result column="suffix" property="suffix" jdbcType="VARCHAR" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <select id="selectDownloadUrlById" resultMap="BaseResultMap" parameterType="Long">
+  		select * from content_accessory where content_id=#{id}
+  </select>
+</mapper>

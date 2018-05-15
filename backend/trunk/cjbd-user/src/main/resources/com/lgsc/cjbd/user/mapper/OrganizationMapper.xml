@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.OrganizationMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.Organization">
+		<!-- WARNING - @mbg.generated -->
+		<id column="organization_id" property="organizationId" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="seq_num" property="seqNum" jdbcType="INTEGER" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap type="com.lgsc.cjbd.user.dto.OrganizationDto"
+		id="OrganiaztionResultMap">
+		<result column="organization_id" property="organizationId" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="seq_num" property="seqNum" jdbcType="INTEGER" />
+		<association property="countUser" select="com.lgsc.cjbd.user.mapper.UserMapper.selectCountBySeqNum"  column="seq_num">
+		</association>
+	</resultMap>
+
+	<select id="selectByName" resultMap="OrganiaztionResultMap">
+ 		SELECT o.organization_id, o.name, o.seq_num    FROM organization o 
+ 		<if test="name!=null">
+ 			where o.name  LIKE CONCAT("%",#{name},"%")
+ 		</if> 
+	</select>
+	
+	<select id="selectNameBySqeNum" resultType="String" parameterType="int">
+		SELECT o.name as organizationName   FROM organization o where seq_num=#{id}
+	</select>
+	
+</mapper>

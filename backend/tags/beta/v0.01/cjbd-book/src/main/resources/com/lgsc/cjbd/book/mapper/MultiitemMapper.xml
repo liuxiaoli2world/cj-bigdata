@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.book.mapper.MultiitemMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.book.model.Multiitem">
+		<!-- WARNING - @mbg.generated -->
+		<id column="multiitem_id" property="multiitemId" jdbcType="BIGINT" />
+		<result column="multifile_id" property="multifileId" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="size" property="size" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />
+		<result column="scene" property="scene" jdbcType="VARCHAR" />
+		<result column="suffix" property="suffix" jdbcType="VARCHAR" />
+		<result column="pv" property="pv" jdbcType="INTEGER" />
+		<result column="is_index_recommend" property="isIndexRecommend"
+			jdbcType="SMALLINT" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap type="java.util.HashMap" id="multiitemWithDownLoadMap"
+		extends="BaseResultMap">
+		<result column="is_download" property="isDownload" jdbcType="SMALLINT" />
+	</resultMap>
+
+	<!-- 图片、音频、视频数量Map -->
+	<resultMap id="SumMap" type="java.util.HashMap">
+		<result column="pic_num" property="picNum" jdbcType="INTEGER" />
+		<result column="music_num" property="musicNum" jdbcType="INTEGER" />
+		<result column="video_num" property="videoNum" jdbcType="INTEGER" />
+	</resultMap>
+
+	<!-- 根据相册id查询图片 -->
+	<select id="selectPicsById" parameterType="long"
+		resultMap="multiitemWithDownLoadMap">
+		SELECT
+		mi.*,m.is_download
+		FROM
+		multiitem mi
+		INNER JOIN multifile m ON
+		mi.multifile_id=m.multifile_id WHERE m.multifile_id=#{multifileId}
+		ORDER BY mi.rank ASC
+	</select>
+
+	<!-- 根据多媒体id查询所有多媒体项目，scene 1=封面 -->
+	<select id="selectByMultifileId" resultMap="BaseResultMap"
+		parameterType="long">
+		SELECT * FROM multiitem WHERE multifile_id =
+		#{multifileId} AND scene != '1' ORDER BY rank
+	</select>
+
+	<select id="selectMaxRank" resultType="int">
+		SELECT MAX(rank) FROM
+		multiitem
+	</select>
+
+	<!-- 查询图片、音频、视频数量 -->
+	<select id="selectSum" resultMap="SumMap">
+		SELECT
+		IFNULL(
+		(
+		SELECT
+		COUNT(mi.multiitem_id)
+		FROM
+		multiitem mi
+		JOIN multifile mf ON mi.multifile_id = mf.multifile_id
+		WHERE
+		mf.multi_type = 'pic'
+		),
+		0
+		) AS pic_num,
+		IFNULL(
+		(
+		SELECT
+		COUNT(mi.multiitem_id)
+		FROM
+		multiitem mi
+		JOIN multifile mf ON mi.multifile_id = mf.multifile_id
+		WHERE
+		mf.multi_type = 'music'
+		),
+		0
+		) AS music_num,
+		IFNULL(
+		(
+		SELECT
+		COUNT(mi.multiitem_id)
+		FROM
+		multiitem mi
+		JOIN multifile mf ON mi.multifile_id = mf.multifile_id
+		WHERE
+		mf.multi_type = 'video'
+		),
+		0
+		) AS video_num
+	</select>
+
+	<select id="selectPv" parameterType="long" resultType="int">
+		select ifNull(pv,0) as pv from multiitem where multiitem_id = #{multiitemId}
+	</select>
+</mapper>

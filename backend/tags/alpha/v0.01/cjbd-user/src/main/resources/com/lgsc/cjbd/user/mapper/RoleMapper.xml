@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.RoleMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.Role">
+		<!-- WARNING - @mbg.generated -->
+		<id column="role_id" property="roleId" jdbcType="BIGINT" />
+		<result column="role_name" property="roleName" jdbcType="VARCHAR" />
+		<result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<resultMap type="com.lgsc.cjbd.user.dto.RoleDto" id="RoleResultMap">
+		<result column="role_id" property="roleId" jdbcType="BIGINT" />
+		<result column="show_name" property="showName" jdbcType="VARCHAR" />
+		<result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+		<association property="countUser" column="role_id"
+			javaType="int" select="com.lgsc.cjbd.user.mapper.UserRoleMapper.selectRoleUser">
+
+		</association>
+	</resultMap>
+
+	<select id="selectRoleByUserId" resultMap="BaseResultMap">
+		select * from role r left join user_role ur ON r.role_id= ur.role_id where
+		ur.user_id=#{id}
+	</select>
+	<select id="selectRoleIdByName" parameterType="String"
+		resultType="long">
+		select role_id from role where role_name=#{roleName}
+	</select>
+	<select id="selectAllRole" resultMap="RoleResultMap">
+		select * from role where role_id != 100
+	</select>
+</mapper>

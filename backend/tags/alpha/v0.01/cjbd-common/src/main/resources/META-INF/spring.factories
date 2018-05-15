@@ -1,0 +1,5 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.lgsc.cjbd.datasource.druid.DruidAutoConfiguration
+#com.lgsc.cjbd.web.HttpMessageConfiguration
+com.lgsc.cjbd.web.SwaggerConfiguration

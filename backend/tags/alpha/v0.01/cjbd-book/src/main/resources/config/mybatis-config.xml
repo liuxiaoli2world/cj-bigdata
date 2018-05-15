@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>  
+  
+    <settings>  
+        <!-- 打开延迟加载的开关 -->  
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 将积极加载改为消息加载即按需加载 -->  
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <!-- 不自动映射列到字段或属性 -->
+        <setting name="autoMappingBehavior" value="NONE"/>
+        <!-- map结果集返回值为null的字段 -->
+        <setting name="callSettersOnNulls" value="true"/> 
+        <!-- 设置日志类型 -->
+        <setting name="logImpl" value="LOG4J2"/>
+    </settings>  
+  
+</configuration> 

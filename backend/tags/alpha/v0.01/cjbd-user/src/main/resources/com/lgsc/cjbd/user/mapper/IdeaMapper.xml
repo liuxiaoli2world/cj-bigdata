@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lgsc.cjbd.user.mapper.IdeaMapper">
+	<resultMap id="BaseResultMap" type="com.lgsc.cjbd.user.model.Idea">
+		<!-- WARNING - @mbg.generated -->
+		<id column="idea_id" property="ideaId" jdbcType="BIGINT" />
+		<result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+		<result column="idea" property="idea" jdbcType="VARCHAR" />
+		<result column="reply" property="reply" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="SMALLINT" />
+		<result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 条件查询 keyWord 关键词，status 0 查询全部，status 1 未回复留言 2 已回复留言 -->
+	<select id="selectIdeaForAdmin" resultMap="BaseResultMap">
+		select * from idea
+		<where>
+			<if test="keyWord!=null and keyWord!=''.toString() ">
+			  IFNULL(idea,'') like CONCAT('%',#{keyWord},'%')</if>
+		    <if test="status!=-1">and status=#{status}</if>
+		</where>
+		order by created_at desc
+	</select>
+</mapper>
